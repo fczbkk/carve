@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Carve sample page</title>
+
+  <script src="../lib/browser/index.js"></script>
+
+  <style>
+    #test {
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      width: 100px;
+      height: 100px;
+      background: yellow;
+      border: 1px solid red;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div id="test">test</div>
+
+  <script>
+    var elm = document.getElementById('test');
+    var options = {
+      target: {
+        left: 400,
+        top: 300,
+        height: 50
+      },
+      onStart: function () {
+        console.log('start');
+      },
+      onEnd: function () {
+        console.log('end');
+      }
+    };
+    var my_carve = new Carve(elm, options);
+    setTimeout(function () {
+      my_carve.start();
+    }, 1000);
+
+  </script>
+
+</body>
+</html>
