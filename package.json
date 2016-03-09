@@ -45,7 +45,9 @@
     "karma-webpack": "^1.7.0",
     "phantomjs-prebuilt": "^2.1.4",
     "rimraf": "^2.5.2",
-    "the-dom-box": "^1.0.0",
     "webpack": "^1.12.14"
+  },
+  "dependencies": {
+    "the-dom-box": "^1.0.0"
   }
 }
