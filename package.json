@@ -4,15 +4,18 @@
   "description": "Simple animation of DOM element properties.",
   "main": "lib/node/index.js",
   "scripts": {
-    "cleanup": "./node_modules/.bin/rimraf lib",
-    "prebuild": "npm run cleanup",
+    "cleanup": "rimraf lib",
+    "prebuild": "npm run test && npm run cleanup",
     "build": "npm run build:node & npm run build:browser",
-    "build:browser": "./node_modules/.bin/webpack --config webpack.config.js",
-    "build:node": "./node_modules/.bin/babel ./src --out-dir ./lib/node",
+    "build:browser": "webpack --config webpack.config.js",
+    "build:node": "babel ./src --out-dir ./lib/node",
     "dev": "npm run watch:test & npm run watch:build",
-    "watch:test": "./node_modules/.bin/karma start ./karma.conf.js",
-    "watch:build": "./node_modules/.bin/webpack --config webpack.config.js --watch",
-    "test": "./node_modules/.bin/karma start ./karma.conf.js --single-run"
+    "watch:test": "karma start ./karma.conf.js",
+    "watch:build": "webpack --config webpack.config.js --watch",
+    "test": "karma start ./karma.conf.js --single-run",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "postversion": "git push && git push --tags && npm publish",
+    "version": "npm run build && npm run changelog && git add -A"
   },
   "repository": {
     "type": "git",
