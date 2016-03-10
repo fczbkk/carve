@@ -1,6 +1,6 @@
 {
   "name": "carve",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple animation of DOM element properties.",
   "main": "lib/node/index.js",
   "scripts": {
