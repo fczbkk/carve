@@ -20,6 +20,19 @@ function calculateValue (origin, target, position) {
   return origin + ((target - origin) * position);
 }
 
+function getStyleProperty (element, property) {
+  if (element) {
+    if (element.currentStyle) {
+      return element.currentStyle[property];
+    } else if (window.getComputedStyle) {
+      return document.defaultView
+        .getComputedStyle(element, null)
+        .getPropertyValue(property);
+    }
+  }
+  return null;
+}
+
 const noop = function () {};
 
 const default_options = {
@@ -60,7 +73,14 @@ module.exports = class {
 
     const now = getNow();
     this.stamp_start = now;
+
     this.origin = TheBox.getBox(this.element);
+    // when calculating fixed element's property, we have to adjust by viewport
+    if (getStyleProperty(this.element, 'position') === 'fixed') {
+      const viewport_box = TheBox.getBox('viewport');
+      this.origin.moveBy(0 - viewport_box.left, 0 - viewport_box.top);
+    }
+
     this.interval = setInterval(() => this.tick(), this.options.frequency);
   }
 
