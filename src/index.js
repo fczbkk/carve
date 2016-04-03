@@ -1,4 +1,5 @@
 const TheBox = require('the-dom-box');
+import {getStyleProperties, getStyleProperty} from 'style-properties';
 
 
 function getNow () {
@@ -16,21 +17,8 @@ function getPosition (start, duration) {
   return position;
 }
 
-function calculateValue (origin, target, position) {
+function calculatePositionValue (origin, target, position) {
   return origin + ((target - origin) * position);
-}
-
-function getStyleProperty (element, property) {
-  if (element) {
-    if (element.currentStyle) {
-      return element.currentStyle[property];
-    } else if (window.getComputedStyle) {
-      return document.defaultView
-        .getComputedStyle(element, null)
-        .getPropertyValue(property);
-    }
-  }
-  return null;
 }
 
 const noop = function () {};
@@ -43,6 +31,33 @@ const default_options = {
   onEnd: noop,
   onStop: noop
 };
+
+
+function getPropertyOrigins (element, properties) {
+  const box_properties = ['left', 'top', 'width', 'height'];
+  const element_box = TheBox.getBox(element);
+  const result = getStyleProperties(element, properties);
+
+  // get box properties from TheBox, it is more precise
+  // when calculating fixed element's property, we have to adjust by viewport
+  if (getStyleProperty(element, 'position') === 'fixed') {
+    const viewport_box = TheBox.getBox('viewport');
+    element_box.moveBy(0 - viewport_box.left, 0 - viewport_box.top);
+  }
+
+  properties.forEach((property) => {
+    if (box_properties.indexOf(property) !== -1) {
+      result[property] = {
+        unit: 'px',
+        value: element_box[property],
+        output: element_box[property] + 'px'
+      };
+    }
+  });
+
+  return result;
+}
+
 
 module.exports = class {
 
@@ -74,13 +89,8 @@ module.exports = class {
     const now = getNow();
     this.stamp_start = now;
 
-    this.origin = TheBox.getBox(this.element);
-    // when calculating fixed element's property, we have to adjust by viewport
-    if (getStyleProperty(this.element, 'position') === 'fixed') {
-      const viewport_box = TheBox.getBox('viewport');
-      this.origin.moveBy(0 - viewport_box.left, 0 - viewport_box.top);
-    }
-
+    const properties = Object.keys(this.options.target);
+    this.origin = getPropertyOrigins(this.element, properties)
     this.interval = setInterval(() => this.tick(), this.options.frequency);
   }
 
@@ -102,10 +112,10 @@ module.exports = class {
   }
 
   updateProperty (property, position) {
-    const origin = this.origin[property];
+    const origin = this.origin[property].value;
     const target = this.options.target[property];
-    const new_value = calculateValue(origin, target, position);
-    this.element.style[property] = new_value + 'px';
+    const new_value = calculatePositionValue(origin, target, position);
+    this.element.style[property] = new_value + this.origin[property].unit;
   }
 
   tick () {
