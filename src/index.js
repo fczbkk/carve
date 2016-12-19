@@ -111,6 +111,10 @@ module.exports = class {
     delete this.interval;
   }
 
+  isActive () {
+    return typeof this.interval !== 'undefined';
+  }
+
   updateProperty (property, position) {
     const origin = this.origin[property].value;
     const target = this.options.target[property];
