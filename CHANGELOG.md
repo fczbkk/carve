@@ -1,3 +1,13 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/fczbkk/carve/compare/v1.2.0...v1.3.0) (2016-12-19)
+
+
+### Features
+
+* add isActive check ([333ccf6](https://github.com/fczbkk/carve/commit/333ccf6))
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/fczbkk/carve/compare/v1.0.4...v1.2.0) (2016-04-03)
 
